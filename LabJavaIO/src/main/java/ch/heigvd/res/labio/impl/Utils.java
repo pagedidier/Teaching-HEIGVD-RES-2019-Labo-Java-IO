@@ -1,6 +1,8 @@
 package ch.heigvd.res.labio.impl;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -20,7 +22,30 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    final String winSeparator ="\n\r";
+    final String unixSeparator ="\n";
+    final String MacSeparator ="\r";
+
+
+    //First search if a separator is present in the line
+    String foundedSeparator="";
+    if(lines.contains(winSeparator))
+      foundedSeparator = winSeparator;
+    else if(lines.contains(unixSeparator))
+      foundedSeparator = unixSeparator;
+    else if(lines.contains(MacSeparator))
+      foundedSeparator = MacSeparator;
+
+    // Check if a separator has been found
+    if(foundedSeparator.equals("")){
+      //if no separator has been found
+      return new String[] {"",lines};
+    }
+
+    //we split the lines at the first separator
+    int index = lines.indexOf(foundedSeparator);
+    // Construct and return an array, we need the separator so index+1
+    return new String[] {lines.substring(0,index+1),lines.substring(index+1)};
   }
 
 }
