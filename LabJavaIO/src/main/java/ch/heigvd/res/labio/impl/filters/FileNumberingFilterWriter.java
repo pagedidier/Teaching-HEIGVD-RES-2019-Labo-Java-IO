@@ -19,23 +19,48 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
+  private int lineNumerotation;
+  private boolean isReturnChar;
+
   public FileNumberingFilterWriter(Writer out) {
     super(out);
+    lineNumerotation = 0;
+    isReturnChar = false;
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for (int i = off; i < off + len; i++)
+      write(cbuf[i]);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    Character a = (char)c;
 
+    if (lineNumerotation == 0) {
+      out.write(Integer.toString(++lineNumerotation) + '\t');
+    }
+
+    if (a=='\r') {
+      isReturnChar = true;
+      out.write(c);
+    } else if (a == '\n') {
+      isReturnChar = false;
+      out.write(c);
+      out.write(Integer.toString(++lineNumerotation) + '\t');
+    } else if (isReturnChar) {
+      isReturnChar = false;
+      out.write(Integer.toString(++lineNumerotation) + '\t');
+      out.write(c);
+    } else {
+      out.write(c);
+    }
+  }
 }
