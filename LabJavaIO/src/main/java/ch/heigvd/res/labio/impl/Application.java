@@ -149,8 +149,9 @@ public class Application implements IApplication {
       public void visit(File file) {
         try {
           writer.write(file.getPath() + "\n");
-        } catch (IOException e){ }
-
+        } catch (IOException ex){
+          LOG.log(Level.SEVERE, "Cannot find the file", ex.getMessage());
+        }
       }
     });
   }
